@@ -12,7 +12,7 @@ router.get('/google-auth', passport.authenticate('google', {
 
 router.get(
     '/google/callback',
-    passport.authenticate('google', { failureRedirect: 'http://localhost:3000/auth/login' }),
+    passport.authenticate('google', { failureRedirect: 'https://master.d37rsas8lcxh5s.amplifyapp.com/auth/login' }),
     async (req, res) => {
         const user = req.user;
         const currentDate = new Date();
