@@ -117,7 +117,7 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://master.d37rsas8lcxh5s.amplifyapp.com",
     credentials: true,
   })
 );
@@ -146,7 +146,7 @@ app.use((err, req, res, next) => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://master.d37rsas8lcxh5s.amplifyapp.com",
     credentials: true,
   },
 });
