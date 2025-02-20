@@ -4,7 +4,14 @@ const { generateToken } = require("../utils/jwtUtils");
 const { s3, upload, randomFileName, sharp } = require('../utils/s3Clinet');
 
 
-
+const home=(req,res)=>{
+  try{
+res.send("hello world")
+  }catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ message: "An unexpected error occurred" });
+  }
+};
 
 
 const userSignup = async (req, res) => {
@@ -185,4 +192,4 @@ const getAllUser = async (req, res) => {
       }
     };
   
-module.exports = { userSignup, userLogin,getAllUser ,addUserImage,updateProfile,updateStudentId,getuserById};
+module.exports = { userSignup, userLogin,getAllUser ,addUserImage,updateProfile,updateStudentId,getuserById,home};
