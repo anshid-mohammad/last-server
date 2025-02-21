@@ -127,8 +127,9 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));// app.use(
 
 app.use(
   cors({
-    origin:"https://master.d37rsas8lcxh5s.amplifyapp.com", 
-    
+    // origin:"https://master.d37rsas8lcxh5s.amplifyapp.com", 
+    origin:"http://localhost:3000",
+
     credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
@@ -161,7 +162,8 @@ app.use((err, req, res, next) => {
 
 const io = new Server(server, {
   cors: {
-    origin:"https://master.d37rsas8lcxh5s.amplifyapp.com",
+    origin:"http://localhost:3000",
+    // origin:"https://master.d37rsas8lcxh5s.amplifyapp.com",
     credentials: true,
   },
 });
