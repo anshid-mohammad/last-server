@@ -134,6 +134,8 @@ app.use(
     credentials: true, // Allow cookies and authentication headers
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    exposedHeaders: ["Content-Length", "Content-Type", "Authorization"], // ✅ Expose headers properly
+
   })
 );
 createAdmin()
