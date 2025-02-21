@@ -7,13 +7,14 @@ const addStudentData = async (req, res) => {
     if (!files || !files.photo || !files.identityProof) {
         return res.status(400).json({ error: 'Photo and Identity Proof are required.' });
     }
+    const fileFormat = files.mimetype.includes("png") ? "png" : "jpeg";
 
     try {
         // Process photo file
-        const photoBuffer = await sharp(files.photo[0].buffer)
-            .resize({ height: 1080, width: 720, fit: 'contain' })
-            .jpeg({ quality: 70 })
-            .toBuffer();
+        const photoBuffer = await sharp(files.buffer)
+        .resize({ width: 720, fit: "contain" }) // Resize width to 720px, auto height
+        .webp({ quality: 50 }) // Convert to WebP with 50% quality
+        .toBuffer();
 
         const photoFileName = `${Date.now()}_${randomFileName()}_${files.photo[0].originalname}`;
         const photoParams = {
@@ -26,10 +27,10 @@ const addStudentData = async (req, res) => {
         const photoUrl = photoData.Location;
 
         // Process identity proof file
-        const identityProofBuffer = await sharp(files.identityProof[0].buffer)
-            .resize({ height: 1080, width: 720, fit: 'contain' })
-            .jpeg({ quality: 70 })
-            .toBuffer();
+        const identityProofBuffer = await sharp(files.buffer)
+        .resize({ width: 720, fit: "contain" }) // Resize width to 720px, auto height
+        .webp({ quality: 50 }) // Convert to WebP with 50% quality
+        .toBuffer();
 
         const identityProofFileName = `${Date.now()}_${randomFileName()}_${files.identityProof[0].originalname}`;
         const identityProofParams = {
@@ -38,7 +39,7 @@ const addStudentData = async (req, res) => {
             Body: identityProofBuffer,
             ContentType: files.identityProof[0].mimetype,
         };
-        const identityProofData = await s3.upload(identityProofParams).promise();
+        const identityProofData = await s3.upload(identityProofParams, { PartSize: 10 * 1024 * 1024, QueueSize: 1 }).promise();
         const identityProofUrl = identityProofData.Location;
 
         // Get student ID
