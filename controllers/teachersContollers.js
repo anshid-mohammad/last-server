@@ -30,7 +30,7 @@ const addCourseDetails = async (req, res) => {
       ContentType: file.mimetype,
     };
 
-    const data = await s3.upload(params).promise();
+    const data = await s3.upload(params, { PartSize: 10 * 1024 * 1024, QueueSize: 1 }).promise();
     const imageUrl = `https://${AWS_S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${uniqueFileName}`;
 
     const lessons = req.body.lessons ? JSON.parse(req.body.lessons) : [];
