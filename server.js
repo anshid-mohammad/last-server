@@ -160,7 +160,7 @@ app.use((err, req, res, next) => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://master.d2ci0ejc8a8mur.amplifyapp.com",
     credentials: true,
   },
 });
