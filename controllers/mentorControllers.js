@@ -4,7 +4,8 @@ const { generateToken } = require("../utils/jwtUtils");
 const CourseDetails= require("../models/teachersForm")
 const { s3, upload, randomFileName, sharp } = require('../utils/s3Clinet');
 const Student = require("../models/studentForm")
-
+ const AWS_REGION="eu-north-1"
+ const AWS_S3_BUCKET_NAME="skillhub-learningapp"
 
 const mentorSignup = async (req, res) => {
   try {
@@ -78,20 +79,21 @@ const getAllVendor = async (req, res) => {
     if (!file) {
       return res.status(400).json({ error: 'No photo file provided' });
     }
-  
+    const fileFormat = file.mimetype.includes("png") ? "png" : "jpeg";
+
     try {
       // Process image using Sharp
       const buffer = await sharp(file.buffer)
-        .resize({ height: 1080, width: 720, fit: 'contain' }) // Resize image
-        .jpeg({ quality: 70 }) // Convert to JPEG with 70% quality
-        .toBuffer();
+      .resize({ width: 720, fit: "contain" }) // Resize width to 720px, auto height
+      .webp({ quality: 50 }) // Convert to WebP with 50% quality
+      .toBuffer();
   
       // Generate unique file name
       const uniqueFileName = `${Date.now()}_${file.originalname}`;
   
       // S3 upload parameters
       const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Bucket: AWS_S3_BUCKET_NAME,
         Key: uniqueFileName,
         Body: buffer,
         ContentType: file.mimetype,
@@ -99,7 +101,7 @@ const getAllVendor = async (req, res) => {
   
       // Upload to S3
       const data = await s3.upload(params).promise();
-      const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`;
+      const imageUrl = `https://${AWS_S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${uniqueFileName}`;
   
       // Find user and update the photo field
       const updatedUser = await Mentor.findByIdAndUpdate(
