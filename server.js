@@ -123,15 +123,13 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));// app.use(
 //   })
 // );
 
-const allowedOrigins = [ 
- " https://master.d37rsas8lcxh5s.amplifyapp.com"
- 
-];
+
 
 app.use(
   cors({
-    origin: allowedOrigins, // Allow both frontend URLs
-    credentials: true, // Allow cookies and authentication headers
+    origin:"https://master.d37rsas8lcxh5s.amplifyapp.com", 
+    
+    credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     exposedHeaders: ["Content-Length", "Content-Type", "Authorization"], // ✅ Expose headers properly
@@ -163,7 +161,7 @@ app.use((err, req, res, next) => {
 
 const io = new Server(server, {
   cors: {
-    origin: "https://master.d37rsas8lcxh5s.amplifyapp.com",
+    origin:"https://master.d37rsas8lcxh5s.amplifyapp.com",
     credentials: true,
   },
 });
