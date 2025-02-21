@@ -106,10 +106,7 @@ const getAllUser = async (req, res) => {
         Bucket:AWS_S3_BUCKET_NAME,
         Key: uniqueFileName,
         Body: buffer,
-        ContentType: "image/webp", // Correct content type
-        ACL: "public-read", // Make image accessible
-
-
+        ContentType: file.mimetype,
       };
   
       // Upload to S3
