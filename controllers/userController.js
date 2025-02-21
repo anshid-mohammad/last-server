@@ -93,9 +93,9 @@ const getAllUser = async (req, res) => {
 
     try {
       // Process image using Sharp
-     const buffer = await sharp(file.buffer)
-      .resize({ width: 720, fit: "contain" }) // Resize width to 720px, height auto-adjusted
-      .toFormat("webp", { quality: 65 }) // Convert to WebP with 65% quality
+      const buffer = await sharp(file.buffer)
+      .resize({ width: 720, fit: "contain" }) // Resize width to 720px, auto height
+      .webp({ quality: 50 }) // Convert to WebP with 50% quality
       .toBuffer();
   
       // Generate unique file name
@@ -106,7 +106,10 @@ const getAllUser = async (req, res) => {
         Bucket:AWS_S3_BUCKET_NAME,
         Key: uniqueFileName,
         Body: buffer,
-        ContentType: file.mimetype,
+        ContentType: "image/webp", // Correct content type
+        ACL: "public-read", // Make image accessible
+
+
       };
   
       // Upload to S3
