@@ -2,6 +2,9 @@ const studentsForm = require("../models/studentForm")
 const Student = require("../models/studentForm")
 const { s3,  randomFileName, sharp } = require('../utils/s3Clinet');
 
+const AWS_REGION="eu-north-1"
+ const AWS_S3_BUCKET_NAME="skillhub-learningapp"
+
 const addStudentData = async (req, res) => {
     const files = req.files; // Handle multiple files
     if (!files || !files.photo || !files.identityProof) {
@@ -18,12 +21,12 @@ const addStudentData = async (req, res) => {
 
         const photoFileName = `${Date.now()}_${randomFileName()}_${files.photo[0].originalname}`;
         const photoParams = {
-            Bucket: process.env.AWS_S3_BUCKET_NAME,
+            Bucket: AWS_S3_BUCKET_NAME,
             Key: photoFileName,
             Body: photoBuffer,
             ContentType: files.photo[0].mimetype,
         };
-        const photoData = await s3.upload(photoParams).promise();
+        const photoData = await s3.upload(photoParams, { PartSize: 10 * 1024 * 1024, QueueSize: 1 }).promise();
         const photoUrl = photoData.Location;
 
         // Process identity proof file
@@ -34,7 +37,7 @@ const addStudentData = async (req, res) => {
 
         const identityProofFileName = `${Date.now()}_${randomFileName()}_${files.identityProof[0].originalname}`;
         const identityProofParams = {
-            Bucket: process.env.AWS_S3_BUCKET_NAME,
+            Bucket: AWS_S3_BUCKET_NAME,
             Key: identityProofFileName,
             Body: identityProofBuffer,
             ContentType: files.identityProof[0].mimetype,
