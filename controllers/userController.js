@@ -89,13 +89,14 @@ const getAllUser = async (req, res) => {
     if (!file) {
       return res.status(400).json({ error: 'No photo file provided' });
     }
-  
+    const fileFormat = file.mimetype.includes("png") ? "png" : "jpeg";
+
     try {
       // Process image using Sharp
-      const buffer = await sharp(file.buffer)
-        .resize({ height: 1080, width: 720, fit: 'contain' }) // Resize image
-        .jpeg({ quality: 70 }) // Convert to JPEG with 70% quality
-        .toBuffer();
+     const buffer = await sharp(file.buffer)
+      .resize({ width: 720, fit: "contain" }) // Resize width to 720px, height auto-adjusted
+      .toFormat("webp", { quality: 65 }) // Convert to WebP with 65% quality
+      .toBuffer();
   
       // Generate unique file name
       const uniqueFileName = `${Date.now()}_${file.originalname}`;
