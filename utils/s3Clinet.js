@@ -3,11 +3,16 @@ const multer = require('multer');
 const sharp = require('sharp');
 const crypto = require('crypto');
 
+const AWS_ACCESS_KEY_ID="AKIAVYV52FGTMFTC4LMY"
+const  AWS_SECRET_ACCESS_KEY="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"
+ const AWS_REGION="eu-north-1"
+ const AWS_S3_BUCKET_NAME="skillhub-learningapp"
+
 // AWS Configuration
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  accessKeyId: AWS_ACCESS_KEY_ID,
+  secretAccessKey:AWS_SECRET_ACCESS_KEY,
+  region:AWS_REGION,
 });
 
 const s3 = new AWS.S3();

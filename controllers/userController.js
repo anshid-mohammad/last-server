@@ -2,6 +2,10 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/jwtUtils");
 const { s3, upload, randomFileName, sharp } = require('../utils/s3Clinet');
+const AWS_ACCESS_KEY_ID="AKIAVYV52FGTMFTC4LMY"
+const  AWS_SECRET_ACCESS_KEY="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"
+ const AWS_REGION="eu-north-1"
+ const AWS_S3_BUCKET_NAME="skillhub-learningapp"
 
 
 const home=(req,res)=>{
@@ -98,7 +102,7 @@ const getAllUser = async (req, res) => {
   
       // S3 upload parameters
       const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Bucket:AWS_S3_BUCKET_NAME,
         Key: uniqueFileName,
         Body: buffer,
         ContentType: file.mimetype,
@@ -106,7 +110,7 @@ const getAllUser = async (req, res) => {
   
       // Upload to S3
       const data = await s3.upload(params).promise();
-      const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`;
+      const imageUrl = `https://${AWS_S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${uniqueFileName}`;
   
       // Find user and update the photo field
       const updatedUser = await User.findByIdAndUpdate(

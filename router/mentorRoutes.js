@@ -5,7 +5,8 @@ const {addCourseDetails,getCourseData, addStudentIdbtCourse, enrollCourse, updat
 const multer = require('multer');
 const { getTeacherId } = require("../controllers/mentorControllers");
 
-const upload = multer({ storage: multer.memoryStorage() }); 
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 router.post('/add-course', upload.single('photo'), addCourseDetails);
 router.get("/get-course",getCourseData)

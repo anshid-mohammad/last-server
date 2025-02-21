@@ -123,10 +123,9 @@ app.use(express.json());
 //   })
 // );
 
-const allowedOrigins = [
-  "http://localhost:3000", 
+const allowedOrigins = [ 
   "https://master.d2ci0ejc8a8mur.amplifyapp.com", 
-  "https://zstyleinat.xyz"
+ 
 ];
 
 app.use(cors({

@@ -27,7 +27,10 @@ const addFavorite = async (req, res) => {
       await newFavorite.save();
   
       res.status(200).json({ message: 'Course added to favorites' });
+
     } catch (error) {
+      console.error("Error updating user image:", error);
+
       console.error('Error adding to favorites:', error);
       res.status(500).json({ message: 'Failed to add course to favorites' });
     }
