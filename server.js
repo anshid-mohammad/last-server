@@ -124,7 +124,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));// app.use(
 // );
 
 const allowedOrigins = [ 
-  "https://master.d2ci0ejc8a8mur.amplifyapp.com", 
+ " https://master.d37rsas8lcxh5s.amplifyapp.com"
  
 ];
 
@@ -163,7 +163,7 @@ app.use((err, req, res, next) => {
 
 const io = new Server(server, {
   cors: {
-    origin: "https://master.d2ci0ejc8a8mur.amplifyapp.com",
+    origin: "https://master.d37rsas8lcxh5s.amplifyapp.com",
     credentials: true,
   },
 });
