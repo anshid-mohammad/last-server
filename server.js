@@ -115,12 +115,26 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+// app.use(
+  
+//   cors({
+//     origin: "https://master.d2ci0ejc8a8mur.amplifyapp.com",
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = [
+  "http://localhost:3000", 
+  "https://master.d2ci0ejc8a8mur.amplifyapp.com", 
+  "https://zstyleinat.xyz"
+];
+
+app.use(cors({
+  origin: allowedOrigins, // Allow frontend and backend domain
+  credentials: true, // Allow cookies and authentication headers
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
+  allowedHeaders: ["Content-Type", "Authorization"] // Allowed headers
+}));
 createAdmin()
 app.use(
   session({
