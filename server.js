@@ -128,12 +128,14 @@ const allowedOrigins = [
  
 ];
 
-app.use(cors({
-  origin: allowedOrigins, // Allow frontend and backend domain
-  credentials: true, // Allow cookies and authentication headers
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
-  allowedHeaders: ["Content-Type", "Authorization"] // Allowed headers
-}));
+app.use(
+  cors({
+    origin: allowedOrigins, // Allow both frontend URLs
+    credentials: true, // Allow cookies and authentication headers
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  })
+);
 createAdmin()
 app.use(
   session({

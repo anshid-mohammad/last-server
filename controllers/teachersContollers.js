@@ -3,6 +3,8 @@ const CourseDetails=require("../models/teachersForm")
 const Course = require('../models/teachersForm'); // Import your Mongoose Course model
 // AWS Configuration
 const { s3, upload, randomFileName, sharp } = require('../utils/s3Clinet');
+ const AWS_REGION="eu-north-1"
+ const AWS_S3_BUCKET_NAME="skillhub-learningapp"
 
 const addCourseDetails = async (req, res) => {
   const file = req.file;
@@ -11,22 +13,25 @@ const addCourseDetails = async (req, res) => {
     return res.status(400).json({ error: 'No photo file provided' });
   }
 
-  try {
-    const buffer = await sharp(file.buffer)
-      .resize({ height: 1080, width: 720, fit: 'contain' })
-      .jpeg({ quality: 70 })
+  const fileFormat = file.mimetype.includes("png") ? "png" : "jpeg";
+
+    try {
+      // Process image using Sharp
+      const buffer = await sharp(file.buffer)
+      .resize({ width: 720, fit: "contain" }) // Resize width to 720px, auto height
+      .webp({ quality: 50 }) // Convert to WebP with 50% quality
       .toBuffer();
 
     const uniqueFileName = `${Date.now()}_${randomFileName()}_${file.originalname}`;
     const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Bucket: AWS_S3_BUCKET_NAME,
       Key: uniqueFileName,
       Body: buffer,
       ContentType: file.mimetype,
     };
 
     const data = await s3.upload(params).promise();
-    const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`;
+    const imageUrl = `https://${AWS_S3_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${uniqueFileName}`;
 
     const lessons = req.body.lessons ? JSON.parse(req.body.lessons) : [];
 
