@@ -93,6 +93,8 @@
 // server.listen(PORT, () => {
 //   console.log(`Server running on http://localhost:${PORT}`);
 // });
+
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -128,7 +130,6 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));// app.use(
 app.use(
   cors({
     origin:"https://master.d37rsas8lcxh5s.amplifyapp.com", 
-    
     credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
