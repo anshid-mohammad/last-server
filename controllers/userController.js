@@ -2,15 +2,13 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/jwtUtils");
 const { s3, upload, randomFileName, sharp } = require('../utils/s3Clinet');
-const AWS_ACCESS_KEY_ID="AKIAVYV52FGTMFTC4LMY"
-const  AWS_SECRET_ACCESS_KEY="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"
  const AWS_REGION="eu-north-1"
  const AWS_S3_BUCKET_NAME="skillhub-learningapp"
 
 
 const home=(req,res)=>{
   try{
-res.send("hello anshid")
+res.send("hello new server")
   }catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({ message: "An unexpected error occurred" });
