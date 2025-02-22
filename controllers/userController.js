@@ -10,7 +10,7 @@ const  AWS_SECRET_ACCESS_KEY="7+FdI2yVkL3U4QqBKjfDcm0PSHcMjsfSRePldLfu"
 
 const home=(req,res)=>{
   try{
-res.send("hello world")
+res.send("hello anshid")
   }catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({ message: "An unexpected error occurred" });
