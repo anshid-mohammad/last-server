@@ -2,78 +2,83 @@ const studentsForm = require("../models/studentForm")
 const Student = require("../models/studentForm")
 const { s3,  randomFileName, sharp } = require('../utils/s3Clinet');
 
+const AWS_REGION = "eu-north-1";
+const AWS_S3_BUCKET_NAME = "skillhub-learningapp";
+
 const addStudentData = async (req, res) => {
-  const files = req.files; // Handle multiple files
-  if (!files || !files.photo || !files.identityProof) {
-      return res.status(400).json({ error: 'Photo and Identity Proof are required.' });
-  }
+    const files = req.files;
 
-  try {
-      // Process photo file
-      const photoBuffer = await sharp(files.photo[0].buffer)
-          .resize({ height: 1080, width: 720, fit: 'contain' })
-          .jpeg({ quality: 70 })
-          .toBuffer();
+    if (!files || !files.photo || !files.identityProof) {
+        return res.status(400).json({ error: 'Photo and Identity Proof are required.' });
+    }
 
-      const photoFileName = `${Date.now()}_${randomFileName()}_${files.photo[0].originalname}`;
-      const photoParams = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME,
-          Key: photoFileName,
-          Body: photoBuffer,
-          ContentType: files.photo[0].mimetype,
-      };
-      const photoData = await s3.upload(photoParams).promise();
-      const photoUrl = photoData.Location;
+    try {
+        // Function to process and optimize images
+        const processImage = async (file) => {
+            return await sharp(file.buffer)
+                .resize({ width: 500, fit: "cover" }) // Reduce width to 500px
+                .webp({ quality: 40 }) // Reduce quality to 40%
+                .toBuffer();
+        };
 
-      // Process identity proof file
-      const identityProofBuffer = await sharp(files.identityProof[0].buffer)
-          .resize({ height: 1080, width: 720, fit: 'contain' })
-          .jpeg({ quality: 70 })
-          .toBuffer();
+        // Process photo file
+        const photoBuffer = await processImage(files.photo[0]);
+        const photoFileName = `${Date.now()}_${randomFileName()}_${files.photo[0].originalname}`;
+        const photoParams = {
+            Bucket: AWS_S3_BUCKET_NAME,
+            Key: photoFileName,
+            Body: photoBuffer,
+            ContentType: "image/webp",
+        };
+        const photoData = await s3.upload(photoParams).promise();
+        const photoUrl = photoData.Location;
 
-      const identityProofFileName = `${Date.now()}_${randomFileName()}_${files.identityProof[0].originalname}`;
-      const identityProofParams = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME,
-          Key: identityProofFileName,
-          Body: identityProofBuffer,
-          ContentType: files.identityProof[0].mimetype,
-      };
-      const identityProofData = await s3.upload(identityProofParams).promise();
-      const identityProofUrl = identityProofData.Location;
+        // Process identity proof file
+        const identityProofBuffer = await processImage(files.identityProof[0]);
+        const identityProofFileName = `${Date.now()}_${randomFileName()}_${files.identityProof[0].originalname}`;
+        const identityProofParams = {
+            Bucket: AWS_S3_BUCKET_NAME,
+            Key: identityProofFileName,
+            Body: identityProofBuffer,
+            ContentType: "image/webp",
+        };
+        const identityProofData = await s3.upload(identityProofParams).promise();
+        const identityProofUrl = identityProofData.Location;
 
-      // Get student ID
-      const studentId = req.session?.student?._id || req.student?.id || req.body.studentId;
-      const teacherId = req.session?.teacher?._id || req.teacher?.id || req.body.teacherId;
-      const courseId = req.session?.course?._id || req.course?.id || req.body.courseId;
+        // Get student ID
+        const studentId = req.session?.student?._id || req.body.studentId;
+        const teacherId = req.session?.teacher?._id || req.body.teacherId;
+        const courseId = req.session?.course?._id || req.body.courseId;
 
-      if (!studentId) {
-          return res.status(400).json({ error: 'User ID is required to add a student' });
-      }
+        if (!studentId) {
+            return res.status(400).json({ error: 'User ID is required to add a student' });
+        }
 
-      // Save student data to database
-      const newStudent = new Student({
-          ...req.body,
-          photo: photoUrl,
-          identityProof: identityProofUrl,
-          studentId,
-          teacherId,
-          courseId,
-      });
+        // Save student data to database
+        const newStudent = new Student({
+            ...req.body,
+            photo: photoUrl,
+            identityProof: identityProofUrl,
+            studentId,
+            teacherId,
+            courseId,
+        });
 
-      await newStudent.save();
+        await newStudent.save();
 
-      res.status(201).json({
-          message: 'Student data added successfully!',
-          student: newStudent,
-      });
-  } catch (error) {
-      console.error('Error adding student data:', error);
-      res.status(500).json({
-          message: 'Failed to add student data',
-          error: error.message,
-      });
-  }
+        res.status(201).json({
+            message: 'Student data added successfully!',
+            student: newStudent,
+        });
+    } catch (error) {
+        console.error('Error adding student data:', error);
+        res.status(500).json({
+            message: 'Failed to add student data',
+            error: error.message,
+        });
+    }
 };
+
 
 // const getAllStudents = async (req, res) => {
 //   try {
