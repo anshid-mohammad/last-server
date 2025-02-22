@@ -1,4 +1,4 @@
-const {secretKey} =require("../configration/jwtConfig")
+const {secretKey} =require("../configuration/jwtConfig")
 const jwt = require("jsonwebtoken");
 
 // Function to generate JWT token
