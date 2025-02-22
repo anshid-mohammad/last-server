@@ -18,7 +18,7 @@ router.post("/update-profile",updateProfile)
 router.post("/update-profile-ventor",updateProfileVentor)
 router.post("/add-imageUrl-ventor",upload.single('photo'),addVentorImage)
 router.post('/add-userId/:studentId',updateStudentId)
-router.post('/add-studentId/:teacherId',addStudentIdInMentorStore)
+router.post('/add-studentId',addStudentIdInMentorStore)
 router.get('/get-userbyid/:id',getuserById)
 
 

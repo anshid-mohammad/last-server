@@ -149,8 +149,8 @@ const getAllVendor = async (req, res) => {
   const addStudentIdInMentorStore=async(req,res)=>{
 
     try {
-      const { teacherId } = req.params;
-      const { studentId } = req.body;
+      const { studentId,teacherId } = req.body;
+
       console.log("iuji",teacherId)
 
   
