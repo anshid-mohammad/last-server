@@ -36,13 +36,17 @@ passport.deserializeUser((user, done) => {
 console.log("Google Client ID:", process.env.GOOGLE_CLIENT_ID);
 
 passport.use(new GoogleStrategy(
-    {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "https://zstyleinat.xyz/auth/google/callback",
-        scope: ["profile", "email"],
-    },
-    (request, accessToken, refreshToken, profile, done) => {
-        return done(null, profile);
-    }
+  {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "https://zstyleinat.xyz/auth/google/callback",
+      passReqToCallback: true, // ✅ Add this
+      scope: ["profile", "email"],
+  },
+  function (request, accessToken, refreshToken, profile, done) {
+      console.log("✅ Google Strategy Callback Triggered");
+      console.log("Profile received:", profile);
+      return done(null, profile);
+  }
 ));
+

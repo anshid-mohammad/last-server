@@ -67,49 +67,44 @@ router.get('/google-auth', passport.authenticate('google', {
 // Google Callback Route
 router.get(
     '/google/callback',
-    passport.authenticate('google', { failureRedirect: `${clientUrl}login` }),
+    passport.authenticate('google', { failureRedirect: "https://master.d298fqlts9wdsx.amplifyapp.com/login" }),
     async (req, res) => {
+        if (!req.user) {
+            console.error("❌ Google Authentication Failed: No user found in req.user");
+            return res.redirect("https://master.d298fqlts9wdsx.amplifyapp.com/login");
+        }
+
+        console.log("✅ Google Authentication Success:", req.user);
+
         try {
-            if (!req.user) {
-                return res.redirect(`${clientUrl}login?error=NoUserData`);
-            }
-
-            const user = req.user;
-            const currentDate = new Date();
-
-            // Check if email is available
-            const email = user.emails?.[0]?.value;
-            if (!email) {
-                return res.redirect(`${clientUrl}login?error=EmailNotFound`);
-            }
-
             const userExists = await User.findOneAndUpdate(
-                { email },
+                { email: req.user.emails[0].value },
                 {
                     $set: {
-                        name: user.displayName,
-                        userId: user.id,
-                        updatedAt: currentDate,
-                        role: user.role
+                        name: req.user.displayName,
+                        role: req.user.role || "learner", // Default to 'learner'
+                        userId: req.user.id,
+                        updatedAt: new Date(),
                     },
                     $setOnInsert: {
-                        createdAt: currentDate,
-                        // role: 'learner' // Default role
+                        createdAt: new Date(),
                     },
                 },
                 { upsert: true, new: true }
             );
 
-            console.log("User:", userExists);
+            console.log("✅ User saved/updated:", userExists);
 
-            // Generate JWT token
             const jwt = generateToken(userExists);
-            res.redirect(`${clientUrl}learners?token=${jwt}&username=${encodeURIComponent(user.displayName)}&userRole=${userExists.role}&userid=${userExists.id}`);
+            console.log("✅ Generated JWT:", jwt);
+
+            res.redirect(`https://master.d298fqlts9wdsx.amplifyapp.com/learners?token=${jwt}&username=${req.user.displayName}&userRole=${userExists.role}&userid=${userExists.id}`);
         } catch (error) {
-            console.error('Error during Google login:', error);
-            res.redirect(`${clientUrl}login?error=ServerError`);
+            console.error("❌ Error saving user:", error);
+            res.status(500).json({ message: 'Internal Server Error' });
         }
     }
 );
+
 
 module.exports = router;
