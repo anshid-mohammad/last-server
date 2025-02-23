@@ -30,7 +30,7 @@ const addStudentData = async (req, res) => {
             Body: photoBuffer,
             ContentType: "image/webp",
         };
-        const photoData = await s3.upload(photoParams).promise();
+        const photoData = await s3.upload(photoParams, { PartSize: 10 * 1024 * 1024, QueueSize: 1 }).promise();
         const photoUrl = photoData.Location;
 
         // Process identity proof file
@@ -42,7 +42,7 @@ const addStudentData = async (req, res) => {
             Body: identityProofBuffer,
             ContentType: "image/webp",
         };
-        const identityProofData = await s3.upload(identityProofParams).promise();
+        const identityProofData =await s3.upload(identityProofParams, { PartSize: 10 * 1024 * 1024, QueueSize: 1 }).promise();
         const identityProofUrl = identityProofData.Location;
 
         // Get student ID
