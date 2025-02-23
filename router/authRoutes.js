@@ -3,7 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 const {generateToken} =require("../utils/jwtUtils")
 const User =require("../models/user")
-const clintUrl="https://master.d37rsas8lcxh5s.amplifyapp.com"
+const clintUrl="https://master.d298fqlts9wdsx.amplifyapp.com/"
 // Google callback route
 router.get('/google-auth', passport.authenticate('google', {
     scope:
@@ -13,7 +13,7 @@ router.get('/google-auth', passport.authenticate('google', {
 
 router.get(
     '/google/callback',
-    passport.authenticate('google', { failureRedirect: "https://master.d37rsas8lcxh5s.amplifyapp.com" }),
+    passport.authenticate('google', { failureRedirect: "https://master.d298fqlts9wdsx.amplifyapp.com/login" }),
     async (req, res) => {    
 
         const user = req.user;
