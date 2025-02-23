@@ -126,7 +126,7 @@ app.use(
   cors({
     origin:"https://master.d37rsas8lcxh5s.amplifyapp.com", 
     credentials: true, 
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed request methods
+    methods: ["GET", "POST", "PUT", "DELETE","OPTIONS"], // Allowed request methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     exposedHeaders: ["Content-Length", "Content-Type", "Authorization"], // ✅ Expose headers properly
 
