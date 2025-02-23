@@ -15,11 +15,12 @@ const addStudentData = async (req, res) => {
     try {
         // Function to process and optimize images
         const processImage = async (file) => {
-            return await sharp(file.buffer)
-                .resize({ width: 500, fit: "cover" }) // Reduce width to 500px
-                .webp({ quality: 30 }) // Reduce quality to 40%
-                .toBuffer();
-        };
+          return await sharp(file.buffer)
+              .resize({ width: 300, height: 300, fit: "cover" }) // Reduce dimensions further
+              .webp({ quality: 20 }) // Reduce quality to 20%
+              .toBuffer();
+      };
+      
 
         // Process photo file
         const photoBuffer = await processImage(files.photo[0]);
