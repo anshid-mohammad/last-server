@@ -151,7 +151,7 @@ const getAllVendor = async (req, res) => {
     try {
       const { studentId,teacherId } = req.body;
 
-      console.log("iuji",teacherId)
+      console.log("iuji",teacherId,studentId)
 
   
       // Find mentor and update with studentId
