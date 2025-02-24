@@ -3,7 +3,6 @@ const passport = require('passport');
 const router = express.Router();
 const {generateToken} =require("../utils/jwtUtils")
 const User =require("../models/user")
-const clintUrl="https://master.d298fqlts9wdsx.amplifyapp.com/"
 // Google callback route
 router.get('/google-auth', passport.authenticate('google', {
     scope:
@@ -40,7 +39,7 @@ router.get(
             console.log("disply name",userExists.id)
 
             const jwt = generateToken(userExists);
-            res.redirect(`${clintUrl}learners?token=${jwt}&username=${user.displayName}&userRole=${userExists.role}&userid=${userExists.id}`);
+            res.redirect(`https://master.d298fqlts9wdsx.amplifyapp.com/learners?token=${jwt}&username=${req.user.displayName}&userRole=${userExists.role}&userid=${userExists.id}`);
 
  
         } catch (error) {
