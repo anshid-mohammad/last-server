@@ -17,7 +17,7 @@ const addStudentData = async (req, res) => {
         const processImage = async (file) => {
           return await sharp(file.buffer)
               .resize({ width: 300, height: 300, fit: "cover" }) // Reduce dimensions further
-              .webp({ quality: 20 }) // Reduce quality to 20%
+              .webp({ quality: 10 }) // Reduce quality to 20%
               .toBuffer();
       };
       
