@@ -18,7 +18,7 @@ const mentorSchema = new mongoose.Schema(
     skills: { type: [String], default: [] }, // Changed from String to Array
     certifications  : { type: [String], default: [] }, // Changed from String to Array
     hobbies: { type: [String], default: [] }, // Changed from String to Array
-    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Stores mentor's ID
+    studentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }]
 
   },
   { timestamps: true } 

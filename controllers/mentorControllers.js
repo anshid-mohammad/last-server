@@ -146,29 +146,32 @@ const getAllVendor = async (req, res) => {
   };
   
   
-  const addStudentIdInMentorStore=async(req,res)=>{
-
+  const addStudentIdInMentorStore = async (req, res) => {
     try {
-      const { studentId,teacherId } = req.body;
-
-      console.log("iuji",teacherId,studentId)
-
+      const { studentId, teacherId } = req.body;
+      console.log("Adding Student to Mentor:", teacherId, studentId);
   
-      // Find mentor and update with studentId
-      const student = await Mentor.findById(teacherId);
-      if (!student) {
+      // Find mentor by ID
+      const mentor = await Mentor.findById(teacherId);
+      if (!mentor) {
         return res.status(404).json({ success: false, message: 'Mentor not found' });
       }
   
-      student.studentId = studentId;
-      await student.save();
+      // Ensure `studentId` is stored as an array, add only if it's not already present
+      if (!mentor.studentIds.includes(studentId)) {
+        mentor.studentIds.push(studentId);
+        await mentor.save();
+      } else {
+        return res.json({ success: false, message: 'Student already assigned to this mentor' });
+      }
   
       res.json({ success: true, message: 'Student assigned to mentor successfully' });
     } catch (error) {
       console.error('Error assigning student to mentor:', error);
       res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-  }
+  };
+  
   const getTeacherId = async (req, res) => {
     try {
       const { id } = req.params; 
