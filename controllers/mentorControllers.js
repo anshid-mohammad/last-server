@@ -191,6 +191,36 @@ const getAllVendor = async (req, res) => {
       });
     }
   };
+  const changeStatusReview = async (req, res) => {
+    try {
+      const { id } = req.params; // Get the student ID from the route parameter
+      const { status } = req.body; // Get the new status from the request body
   
+      // Find and update the student by its ID
+      const updatedStudent = await Student.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedStudent) {
+        return res.status(404).json({ success: false, message: "Student not found" });
+      }
+  
+      res.status(200).json({
+        success: true, 
+        message: "Status updated successfully",
+        student: updatedStudent, 
+      });
+    } catch (error) {
+      console.error("Error updating status:", error);
+  
+      res.status(500).json({
+        success: false, // ✅ Ensure consistency in error responses
+        message: "Failed to update status",
+        error: error.message,
+      });
+    }
+  };
 
-module.exports = {mentorLogin, mentorSignup,getAllVendor,addVentorImage,updateProfileVentor,addStudentIdInMentorStore,getTeacherId};
+module.exports = {mentorLogin, mentorSignup,getAllVendor,addVentorImage,updateProfileVentor,addStudentIdInMentorStore,getTeacherId,changeStatusReview};
